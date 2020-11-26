@@ -5,6 +5,7 @@ from ..db_model.mysqldb_conn import conn_mysqldb
 class User(metaclass=ABCMeta):
     id = ''
     name = ''
+    hashedPw = ''
     classification = ''
     address = ''
 
@@ -13,6 +14,9 @@ class User(metaclass=ABCMeta):
 
     def getName(self):
         return self.name
+
+    def getPw(self):
+        return self.hashedPw
 
     def getClass(self):
         return self.classification
@@ -34,6 +38,24 @@ class User(metaclass=ABCMeta):
         db_conn.commit()
         db_conn.close()
 
+    @staticmethod
+    def getBasicInfo(user_id):
+        db_conn = conn_mysqldb()
+        db_cursor = db_conn.cursor()
+
+        sql = """
+                SELECT user_name, class
+                FROM user_info
+                WHERE user_id=%s
+                """
+
+        db_cursor.execute(sql, user_id)
+        info = db_cursor.fetchone()
+        user_name, classification = info
+        
+        db_conn.close()
+        return user_name, classification
+
 
 class Member(User):
     def __init__(self, user_id):
@@ -41,20 +63,23 @@ class Member(User):
         db_cursor = db_conn.cursor()
         
         sql = """
-                SELECT user_name, address, ordered_num, class
+                SELECT user_name, password, address, ordered_num, class
                 FROM user_info
                 WHERE user_id=%s
                 """
         
-        db_cursor.execute(sql, user_id)
-        info = db_cursor.fetchone()
+        row_cnt = db_cursor.execute(sql, user_id)
 
-        self.id = user_id
-        self.name = info[0]
-        self.address = info[1]
-        self.ordered_num = info[2]
-        self.ordered_num_added = False
-        self.classification = info[3]
+        if row_cnt > 0:
+            info = db_cursor.fetchone()
+
+            self.id = user_id
+            self.name = info[0]
+            self.hashedPw = info[1]
+            self.address = info[2]
+            self.ordered_num = info[3]
+            self.ordered_num_added = False
+            self.classification = info[4]
 
         db_conn.close()
     
@@ -103,43 +128,6 @@ class Member(User):
             db_conn.commit()
             db_conn.close()
 
-class Guest(User):
-    def __init__(self):
-        self.classification = 'guest'
-        self.constructTmpId()
-
-    def constructTmpId(self):
-        uniq = False
-        tmp_id = 0
-
-        db_conn = conn_mysqldb()
-        db_cursor = db_conn.cursor()
-
-        while not uniq:
-            tmp_id = randint(0000000, 9999999)
-
-            sql = """
-                    SELECT *
-                    FROM user_info
-                    WHERE user_id=%s
-                    """
-            cnt = db_cursor.execute(sql, str(tmp_id))
-
-            if not cnt:
-                uniq = True
-
-        self.id = str(tmp_id)
-        self.name = 'guest' + self.id
-
-        sql = """
-                INSERT INTO user_info 
-                (user_name, user_id, class) 
-                VALUES (%s, %s, 'guest')
-                """
-        
-        db_cursor.execute(sql, (self.name, self.id))
-        db_conn.commit()
-        db_conn.close()
 
 class Manager(User):
     def __init__(self, user_id):
@@ -147,16 +135,19 @@ class Manager(User):
         db_cursor = db_conn.cursor()
         
         sql = """
-                SELECT user_name
+                SELECT user_name, password
                 FROM user_info
                 WHERE user_id=%s
                 """
         
-        db_cursor.execute(sql, user_id)
-        info = db_cursor.fetchone()
+        row_cnt = db_cursor.execute(sql, user_id)
 
-        self.id = user_id
-        self.name = info[0]
-        self.classification = 'manager'
+        if row_cnt > 0:
+            info = db_cursor.fetchone()
+
+            self.id = user_id
+            self.name = info[0]
+            self.hashedPw = info[1]
+            self.classification = 'manager'
 
         db_conn.close()
