@@ -5,6 +5,7 @@ from pakages.router.test_module import test_module
 from pakages.router.SignupController import signup_controller
 from pakages.router.StockController import stock_controller
 from pakages.router.LoginController import login_controller
+from pakages.router.OrderController import order_controller
 
 app = Flask(__name__)
 CORS(app)
@@ -14,6 +15,7 @@ app.register_blueprint(test_module)
 app.register_blueprint(signup_controller)
 app.register_blueprint(stock_controller)
 app.register_blueprint(login_controller)
+app.register_blueprint(order_controller)
 
 @app.route('/')
 def index() :

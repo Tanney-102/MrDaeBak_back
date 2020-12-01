@@ -1,14 +1,5 @@
-from pakages.stock_management.StockManagement import StockManagement as SM
+from pakages.order_management.SoldOutMonitor import SoldOutMonitor as Mon
 
-stock = {
-    'st01': 60,
-    'br01': 60
-}
-
-datas = SM.getStock()
-for d in datas:
-    print(d)
-SM.setStock(stock)
-datas = SM.getStock()
-for d in datas:
+m = Mon()
+for d in m.dinnerState:
     print(d)
