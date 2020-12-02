@@ -88,7 +88,7 @@ class Order:
                         break
             elif op.getInfo()['content'].find('add') > -1:
                 self.details.append({
-                    'menuId': op['menu_id'],
+                    'menuId': op.getInfo()['menu_id'],
                     'size': 1,
                     'measure': '',
                     'remove': False,
