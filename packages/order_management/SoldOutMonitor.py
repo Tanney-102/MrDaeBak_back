@@ -59,7 +59,8 @@ class SoldOutMonitor:
                 else:
                     curSize *= 1.5
 
-                curSize*=4
+                if d['measure'] != 'pot' and d['measure'] != 'bottle':
+                    curSize*=4
                 
                 if curSize > curStock:
                     tmpState['orderable'] = 'false'
