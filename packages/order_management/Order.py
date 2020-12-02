@@ -230,6 +230,7 @@ class Order:
                 'userName': od[3],
                 'address': od[4],
                 'paymentInfo': od[5],
+                'resTime': _resTime,
                 'options': [],
             }
 
