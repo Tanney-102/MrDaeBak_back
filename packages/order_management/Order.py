@@ -191,7 +191,7 @@ class Order:
 
     @staticmethod
     def getOrderInfo():
-        curDate = datetime.datetime.now().strftime('%Y-%m-%d')
+        curDate = (datetime.datetime.utcnow() + datetime.timedelta(hours=9)).strftime('%Y-%m-%d')
         orderTable = {
             '17:00': [],
             '18:00': [],
@@ -247,7 +247,7 @@ class Order:
             orderTable[_resTime].append(tmp)
         
         db_conn.close()
-        
+
         return orderTable
 
 
