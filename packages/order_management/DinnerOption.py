@@ -3,10 +3,19 @@ from ..db_model.mysqldb_conn import conn_mysqldb
 import time
 
 class DinnerOption:
-    def __init__(self, menu_id, content):
+    def __init__(self, order_id, menu_id, content):
+        self.order_id= order_id
         self.menu_id = menu_id
         self.content = content
         self.option_id = str(time.time()) + menu_id
+
+    def getInfo(self):
+        return {
+            'orderId': self.order_id,
+            'menuId': self.menu_id,
+            'content': self.content,
+            'optionId': self.option_id
+        }
     
     @staticmethod
     def getValidOptions(din_id):

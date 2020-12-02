@@ -1,11 +1,11 @@
 from flask import Flask, jsonify
 from flask_cors import CORS
-from pakages.db_model.mysqldb_conn import conn_mysqldb
-from pakages.router.test_module import test_module
-from pakages.router.SignupController import signup_controller
-from pakages.router.StockController import stock_controller
-from pakages.router.LoginController import login_controller
-from pakages.router.OrderController import order_controller
+from packages.db_model.mysqldb_conn import conn_mysqldb
+from packages.router.test_module import test_module
+from packages.router.SignupController import signup_controller
+from packages.router.StockController import stock_controller
+from packages.router.LoginController import login_controller
+from packages.router.OrderController import order_controller
 
 app = Flask(__name__)
 CORS(app)

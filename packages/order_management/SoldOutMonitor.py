@@ -2,11 +2,22 @@ from ..db_model.mysqldb_conn import conn_mysqldb
 from .Dinner import Dinner
 from ..stock_management.StockManagement import StockManagement as Stock
 import math
+import datetime
 
 class SoldOutMonitor:
-    def __init__(self):
-        self.dinnerState = []
+    """
+        getDinnerState  
+            -> 각 디너에 포함되는 메뉴의 재고를 확인하고 주문 가능 여부와 기본 정보를 반환
+            -> 모든 재고의 품절여부는 size up한 양의 4인분을 기준으로 한다.
 
+        getOrderedNum
+            -> 각 시간대 별 주문 수 반환
+    """
+    def __init__(self):
+        pass
+
+    def getDinnerState(self):
+        dinnerState = []
         db_conn = conn_mysqldb()
         cursor = db_conn.cursor()
 
@@ -46,8 +57,41 @@ class SoldOutMonitor:
                     curSize = math.ceil(curSize*1.5)
                 else:
                     curSize *= 1.5
+
+                curSize*=4
                 
                 if curSize > curStock:
                     tmpState['orderable'] = 'false'
             
-            self.dinnerState.append(tmpState)
+            dinnerState.append(tmpState)
+
+            return dinnerState
+
+    def getOrderedNum(self):
+        orderedNum = {
+            '17:00': 0,
+            '18:00': 0,
+            '19:00': 0,
+            '20:00': 0,
+            '21:00': 0,
+        }
+
+        curDate = datetime.datetime.now().strftime('%Y-%m-%d')
+        db_conn = conn_mysqldb()
+        cursor = db_conn.cursor()
+
+        sql = """
+                SELECT reservation
+                FROM order_list
+                WHERE reservation like %s
+                """
+
+        cursor.execute(sql, curDate+'%%')
+        orders = cursor.fetchall()
+
+        for od in orders:
+            orderedNum[od[0].split(sep=' ')[1]] += 1
+
+        return orderedNum
+
+

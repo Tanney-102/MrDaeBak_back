@@ -67,26 +67,56 @@ class StockManagement:
                 }
             ]
 
+            또는
+
+            [
+                {
+                    menu_id: "..",
+                    stock: 0,
+                }, {
+                    ...
+                }
+            ]
+
+        stock이 음수일 경우 기존 stock에서 입력값만큼 빼서 저장
         """
-        print(data)
         if data is None:
             return True
 
         db = conn_mysqldb()
         db_cursor = db.cursor()
 
-        sql = """
+        sql1 = """
                 UPDATE menus
                 SET menu_name=%s, stock=%s, note=%s
                 WHERE menu_id=%s
                 """
 
+        sql2 = """
+                UPDATE menus
+                SET stock=%s
+                WHERE menu_id=%s
+                """
+
         for d in data:
-            try:
-                db_cursor.execute(sql, (d['menu_name'], str(d['stock']), d['note'], d['menu_id']))
-            except pymysql.err.InternalError as e:
-                code, msg = e.args
-                print(code, msg)
+            if d['stock'] < 0:
+                db_cursor.execute('SELECT stock From menus WHERE menu_id=%s', d['menu_id'])
+                d['stock'] = db_cursor.fetchone()[0] + d['stock']
+                if d['stock'] < 0:
+                    d['stock'] = 0
+
+            if 'menu_name' in d:
+                try:
+                    db_cursor.execute(sql1, (d['menu_name'], str(d['stock']), d['note'], d['menu_id']))
+                except pymysql.err.InternalError as e:
+                    code, msg = e.args
+                    print(code, msg)
+            else:
+                try:
+                    db_cursor.execute(sql2, (str(d['stock']), d['menu_id']))
+                except pymysql.err.InternalError as e:
+                    code, msg = e.args
+                    print(code, msg)
 
         db.commit() 
         db.close()

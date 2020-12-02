@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request
-from pakages.stock_management.StockManagement import StockManagement as SM
+from ..stock_management.StockManagement import StockManagement as SM
 
 stock_controller = Blueprint('stock_controller', __name__, url_prefix='/stock')
 

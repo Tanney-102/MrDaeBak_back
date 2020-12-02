@@ -2,18 +2,18 @@ from ..db_model.mysqldb_conn import conn_mysqldb
 from .DinnerOption import DinnerOption
 
 class Dinner:
-    def __init__(self, din_info):
-        self.din_id = din_info.dinnerId
-        self.name = din_info.dinnerName
-        self.style = din_info.dinnerStyle
+    def __init__(self, din_info, orderId):
+        self.din_id = din_info['dinnerId']
+        self.name = din_info['dinnerName']
+        self.style = din_info['dinnerStyle']
         self.options = []
 
-        addOptions(din_info)
+        self.addOptions(din_info, orderId)
         
 
-    def addOptions(self, info):
-        for op in info.option:
-            self.options.append(DinnerOption(op.menuId, op.detail))
+    def addOptions(self, info, orderId):
+        for op in info['options']:
+            self.options.append(DinnerOption(orderId, op['menuId'], op['detail']))
 
     def getInfo(self):
         return {
