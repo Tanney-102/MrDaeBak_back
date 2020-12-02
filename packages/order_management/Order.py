@@ -64,11 +64,7 @@ class Order:
         self.paymentInfo = orderInfo['paymentInfo']
         self.dinnerInfo = Dinner(orderInfo['dinnerInfo'], self.orderId)
         self.user = Member(orderInfo['userId'])
-
-        if orderInfo['address'] == '':
-            self.address = user.getAddress()
-        else:
-            self.address = orderInfo['address']
+        self.address = orderInfo['address']
 
         tmpDetail = Dinner.getDetails(self.dinnerInfo.getInfo()['dinnerId'])
         for tmpD in tmpDetail:
@@ -150,6 +146,9 @@ class Order:
         db_conn.close()
 
         self.updateStock()
+        self.user.setAddress(self.address);
+        self.user.addOrderNum();
+        self.user.setClass();
         
         return True
 

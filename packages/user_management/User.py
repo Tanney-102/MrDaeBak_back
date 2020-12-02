@@ -44,17 +44,17 @@ class User(metaclass=ABCMeta):
         db_cursor = db_conn.cursor()
 
         sql = """
-                SELECT user_name, class
+                SELECT user_name, class, address
                 FROM user_info
                 WHERE user_id=%s
                 """
 
         db_cursor.execute(sql, user_id)
         info = db_cursor.fetchone()
-        user_name, classification = info
+        user_name, classification, address = info
         
         db_conn.close()
-        return user_name, classification
+        return user_name, classification, address
 
 
 class Member(User):
