@@ -54,6 +54,7 @@ class User(metaclass=ABCMeta):
         user_name, classification, address = info
         
         db_conn.close()
+        
         return user_name, classification, address
 
 

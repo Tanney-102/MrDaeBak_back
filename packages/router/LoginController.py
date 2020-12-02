@@ -51,6 +51,7 @@ def login():
             'user_id':user.getId(),
             'user_name':user.getName(),
             'classification':user.getClass(), 
+            'address': user.getAddress(),
             'access_token':access_token
             })
 
