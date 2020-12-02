@@ -23,7 +23,7 @@ class SoldOutMonitor:
 
         cursor.execute('SELECT * FROM dinner')
         dinnerInfo = cursor.fetchall()
-        print(dinnerInfo)
+        db_conn.close()
 
         for din_info in dinnerInfo:
             tmpState = {
@@ -89,8 +89,7 @@ class SoldOutMonitor:
 
         cursor.execute(sql, curDate+'%%')
         orders = cursor.fetchall()
-        print(curDate)
-        print(orders)
+        db_conn.close()
 
         for od in orders:
             orderedNum[od[0].split(sep=' ')[1]] += 1

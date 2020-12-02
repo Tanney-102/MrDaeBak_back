@@ -83,7 +83,7 @@ class Order:
         for op in self.dinnerInfo.getInfo()['option']:
             if op.getInfo()['content'] == 'remove':
                 for t in self.details:
-                    if t['menuId'] == op['menuId']:
+                    if t['menuId'] == op.getInfo()['menuId']:
                         t['remove'] = True
                         break
             elif op.getInfo()['content'].find('add') > -1:
@@ -134,13 +134,13 @@ class Order:
                 code, msg = e.args
                 print(code, msg)
 
-        for op in self.dinnerInfo.options:
+        for op in self.dinnerInfo.getInfo()['option']:
             try:
                 cursor.execute(sql_option, (
-                    op.option_id,
-                    op.menu_id,
-                    op.content,
-                    op.order_id,
+                    op.getInfo()['optionId'],
+                    op.getInfo()['menuId'],
+                    op.getInfo()['content'],
+                    op.getInfo()['orderId'],
                 ))
             except pymysql.err.InternalError as e:
                 code, msg = e.args
@@ -245,7 +245,9 @@ class Order:
                 tmp['options'].append(tmpOption)
             
             orderTable[_resTime].append(tmp)
-            
+        
+        db_conn.close()
+        
         return orderTable
 
 
