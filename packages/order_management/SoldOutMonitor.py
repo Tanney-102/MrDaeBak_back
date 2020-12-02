@@ -23,6 +23,7 @@ class SoldOutMonitor:
 
         cursor.execute('SELECT * FROM dinner')
         dinnerInfo = cursor.fetchall()
+        print(dinnerInfo)
 
         for din_info in dinnerInfo:
             tmpState = {
@@ -65,7 +66,7 @@ class SoldOutMonitor:
             
             dinnerState.append(tmpState)
 
-            return dinnerState
+        return dinnerState
 
     def getOrderedNum(self):
         orderedNum = {
