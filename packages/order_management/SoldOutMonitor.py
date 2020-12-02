@@ -89,6 +89,8 @@ class SoldOutMonitor:
 
         cursor.execute(sql, curDate+'%%')
         orders = cursor.fetchall()
+        print(curDate)
+        print(orders)
 
         for od in orders:
             orderedNum[od[0].split(sep=' ')[1]] += 1

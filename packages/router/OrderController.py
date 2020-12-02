@@ -9,7 +9,6 @@ order_controller = Blueprint('order_controller', __name__)
 @order_controller.route('/orderstate', methods=['GET'])
 def getOrderState():
     req = request.args.to_dict()['req']
-    print(req)
 
     if req == 'dinnerState':
         return jsonify(SoldOutMonitor().getDinnerState())
