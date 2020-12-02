@@ -8,7 +8,7 @@ order_controller = Blueprint('order_controller', __name__)
 
 @order_controller.route('/orderstate', methods=['GET'])
 def getOrderState():
-    return jsonify(SoldOutMonitor().getdinnerState())
+    return jsonify(SoldOutMonitor().getDinnerState())
 
 @order_controller.route('/options', methods=['GET'])
 def getOptions():
