@@ -102,7 +102,7 @@ class Order:
 
 
     def registerOrder(self):
-        curDate = datetime.datetime.now().strftime('%Y-%m-%d')
+        curDate = (datetime.datetime.utcnow() + datetime.timedelta(hours=9)).strftime('%Y-%m-%d')
         
         db_conn = conn_mysqldb()
         cursor = db_conn.cursor()
