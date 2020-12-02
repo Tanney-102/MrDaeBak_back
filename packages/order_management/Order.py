@@ -96,7 +96,7 @@ class Order:
                 })
             elif op.getInfo()['content'].find('sizeup') > -1:
                 for t in self.details:
-                    if t['menuId'] == op['menuId']:
+                    if t['menuId'] == op.getInfo()['menuId']:
                         t['extra'] = True
                         break
 
