@@ -27,10 +27,10 @@ class DinnerOption:
         sql = """
                 SELECT menu_id, menu_name, normal_price, extra_price
                 FROM menus
-                WHERE menu_id in (
+                WHERE menu_id not in (
                     SELECT menu_id
                     FROM din_menu_map
-                    WHERE not dinner_id=%s and measure is NULL
+                    WHERE dinner_id=%s or measure is not NULL
                 );
                 """
         
