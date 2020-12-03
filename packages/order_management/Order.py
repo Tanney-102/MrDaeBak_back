@@ -146,7 +146,7 @@ class Order:
         db_conn.close()
 
         self.updateStock()
-        if user.getClass() != 'guest':
+        if self.user.getClass() != 'guest':
             self.user.setAddress(self.address);
             self.user.addOrderNum();
             self.user.setClass();
