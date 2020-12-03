@@ -63,8 +63,12 @@ class Order:
         self.resTime = orderInfo['resTime']
         self.paymentInfo = orderInfo['paymentInfo']
         self.dinnerInfo = Dinner(orderInfo['dinnerInfo'], self.orderId)
-        self.user = Member(orderInfo['userId'])
         self.address = orderInfo['address']
+
+        if orderInfo['userId'] != 'guest':
+            self.user = Member(orderInfo['userId'])
+        else:
+            self.user = 'guest'
 
         tmpDetail = Dinner.getDetails(self.dinnerInfo.getInfo()['dinnerId'])
         for tmpD in tmpDetail:
@@ -113,15 +117,25 @@ class Order:
                 VALUES (%s, %s, %s, %s);
                 """
 
+        id = ''
+        name = ''
+        
+        if self.user is 'guest':
+            id = 'guest'
+            name ='guest'
+        else:
+            id = self.user.getId()
+            name =self.user.getName()
+
         try:
             cursor.execute(sql_order, (
                 self.orderId,
                 self.dinnerInfo.style,
                 self.mealNum,
                 curDate+' '+self.resTime,
-                self.user.getId(),
+                id,
                 self.dinnerInfo.getInfo()['dinnerId'],
-                self.user.getName(),
+                name,
                 self.dinnerInfo.getInfo()['dinnerName'],
                 self.address,
                 self.paymentInfo
@@ -146,7 +160,7 @@ class Order:
         db_conn.close()
 
         self.updateStock()
-        if self.user.getClass() != 'guest':
+        if self.user is not 'guest':
             self.user.setAddress(self.address);
             self.user.addOrderNum();
             self.user.setClass();
