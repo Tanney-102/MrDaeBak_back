@@ -99,7 +99,7 @@ class StockManagement:
                 """
 
         for d in data:
-            if d['stock'] < 0:
+            if int(d['stock']) < 0:
                 db_cursor.execute('SELECT stock From menus WHERE menu_id=%s', d['menu_id'])
                 d['stock'] = db_cursor.fetchone()[0] + d['stock']
                 if d['stock'] < 0:
